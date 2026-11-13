@@ -1,6 +1,16 @@
 module photobooth (
-    input resetn,
-    input clock
+    input wire resetn,
+    input wire clock,
+    input wire enable_invert,
+
+    output wire [3:0] VGA_R,
+    output wire [3:0] VGA_G,
+    output wire [3:0] VGA_B,
+    output wire       VGA_HS,
+    output wire       VGA_VS,
+    output wire       VGA_BLANK_N,
+    output wire       VGA_SYNC_N,
+    output wire       VGA_CLK
 );
   parameter bits_per_pixel = 9;
   parameter bits_per_channel = bits_per_pixel / 3;
@@ -15,8 +25,9 @@ module photobooth (
   inverter #(
       .bits_per_pixel(bits_per_pixel)
   ) u_inverter (
-      .RGB         (RGB),
-      .RGB_inverted(RGB_processed)
+      .enable_invert(enable_invert),
+      .RGB          (RGB),
+      .RGB_inverted (RGB_processed)
   );
 
   vga_adapter u_vga_adapter (

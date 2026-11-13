@@ -1,6 +1,7 @@
 module inverter #(
     parameter bits_per_pixel = 9
 ) (
+    input  wire                      enable_invert,
     input  wire [bits_per_pixel-1:0] RGB,
     output reg  [bits_per_pixel-1:0] RGB_inverted
 );
@@ -9,8 +10,13 @@ module inverter #(
 
   integer i;
   always @(*) begin
-    for (i = 0; i < 3; i = i + 1) begin
-      RGB_inverted[bits_per_channel*i +: bits_per_channel] = max_channel_value - RGB[bits_per_channel*i +: bits_per_channel];
+    if (enable_invert) begin
+      for (i = 0; i < 3; i = i + 1) begin
+        RGB_inverted[bits_per_channel*i +: bits_per_channel] = max_channel_value - RGB[bits_per_channel*i +: bits_per_channel];
+      end
+    end else begin
+      RGB_inverted = RGB;
     end
   end
 endmodule
+

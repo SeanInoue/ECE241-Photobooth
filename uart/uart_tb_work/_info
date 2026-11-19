@@ -1,0 +1,73 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/Users/Sihao/Documents/Code/school/ECE241/ECE241-Photobooth/uart
+vtestbench
+Z1 !s110 1795125451
+!i10b 1
+!s100 =ZgoWg`Ge7^RF^_dHRVWo2
+IWT?TJP`l>4[`gkD2`I[;>1
+Z2 VDg1SIo80bB@j0V0VzS_@n1
+R0
+w1795125443
+8testbench.v
+Ftestbench.v
+L0 12
+Z3 OV;L;10.5b;63
+r1
+!s85 0
+31
+Z4 !s108 1795125451.000000
+Z5 !s107 testbench.v|uart_reciever.v|uart_rx_byte.v|
+Z6 !s90 -work|uart_tb_work|uart_rx_byte.v|uart_reciever.v|testbench.v|
+!i113 1
+Z7 o-work uart_tb_work
+Z8 tCvgOpt 0
+vuart_reciever
+R1
+!i10b 1
+!s100 @bF3^X4ZE40:_5MY3HhQR1
+IVeg[^@:VoX_d6^5CDaC>C2
+R2
+R0
+w1795124817
+8uart_reciever.v
+Fuart_reciever.v
+L0 7
+R3
+r1
+!s85 0
+31
+R4
+R5
+R6
+!i113 1
+R7
+R8
+vuart_rx_byte
+R1
+!i10b 1
+!s100 kXYcK440WfOO3VXM5co5c2
+I2MK:8;MWBS;m`XBdS@=:b2
+R2
+R0
+w1795121556
+8uart_rx_byte.v
+Fuart_rx_byte.v
+L0 3
+R3
+r1
+!s85 0
+31
+R4
+R5
+R6
+!i113 1
+R7
+R8

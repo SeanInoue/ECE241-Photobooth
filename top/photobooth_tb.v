@@ -3,6 +3,9 @@
 module photobooth_tb ();
 
   parameter CLOCK_PERIOD = 10;
+  parameter delay = 0;
+  parameter nX = 4;
+  parameter nY = 2;
 
   reg enable_invert;
   reg resetn;
@@ -29,18 +32,14 @@ module photobooth_tb ();
     // $finish;
   end
 
-  photobooth u_photobooth (
+  photobooth #(
+      .delay(delay),
+      .nX(nX),
+      .nY(nY)
+  ) u_photobooth (
       .resetn       (resetn),
       .clock        (CLOCK_50),
-      .enable_invert(enable_invert),
-      .VGA_R        (VGA_R),
-      .VGA_G        (VGA_G),
-      .VGA_B        (VGA_B),
-      .VGA_HS       (VGA_HS),
-      .VGA_VS       (VGA_VS),
-      .VGA_BLANK_N  (VGA_BLANK_N),
-      .VGA_SYNC_N   (VGA_SYNC_N),
-      .VGA_CLK      (VGA_CLK)
+      .enable_invert(enable_invert)
   );
 
 endmodule

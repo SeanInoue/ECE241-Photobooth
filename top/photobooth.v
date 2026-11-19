@@ -1,6 +1,10 @@
 module photobooth #(
     parameter RESOLUTION = "640x480",
-    parameter bits_per_pixel = 9
+    parameter bits_per_pixel = 9,
+    parameter delay = 24_999_999,
+    parameter nX = (RESOLUTION == "640x480") ? 10 : ((RESOLUTION == "320x240") ? 9 : 8),
+    parameter nY = (RESOLUTION == "640x480") ? 9 : ((RESOLUTION == "320x240") ? 8 : 7)
+
 ) (
     input wire resetn,
     input wire clock,
@@ -15,10 +19,10 @@ module photobooth #(
     output wire       VGA_SYNC_N,
     output wire       VGA_CLK
 );
-  parameter nX = (RESOLUTION == "640x480") ? 10 : ((RESOLUTION == "320x240") ? 9 : 8);
-  parameter nY = (RESOLUTION == "640x480") ? 9 : ((RESOLUTION == "320x240") ? 8 : 7);
-  parameter bits_per_channel = bits_per_pixel / 3;
+
+  parameter bits_per_channel  = bits_per_pixel / 3;
   parameter max_channel_value = {bits_per_channel{1'b1}};
+
 
   wire [bits_per_pixel-1:0] RGB;  // connect uart to processor
   wire [bits_per_pixel-1:0] RGB_processed;  // connect processor to vga
@@ -28,9 +32,12 @@ module photobooth #(
 
   uart_reciever_mock #(
       .bits_per_pixel(bits_per_pixel),
-      .RESOLUTION(RESOLUTION)
+      .RESOLUTION(RESOLUTION),
+      .delay(delay),
+      .nX(nX),
+      .nY(nY)
   ) u_uart_reciever_mock (
-      .uart     (1'bx), // remember to connect
+      .uart     (1'bx),      // remember to connect
       .clock    (clock),
       .resetn   (resetn),
       .RGB      (RGB),

@@ -5,3 +5,4 @@ transcript
 *.wlf
 milestone1/
 tasks/
+.venv

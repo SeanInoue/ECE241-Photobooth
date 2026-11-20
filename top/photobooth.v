@@ -29,20 +29,15 @@ module photobooth #(
   parameter max_channel_value = {bits_per_channel{1'b1}};
 
 
-  wire [bits_per_pixel-1:0] RGB;  // connect uart to processor
-  wire [bits_per_pixel-1:0] RGB_processed, RGB_inverted, RGB_grayscaled, RGB_filtered;
+  wire [bits_per_pixel-1:0] RGB;  // connect uart to image processor
+  wire [bits_per_pixel-1:0] RGB_processed, RGB_inverted, RGB_grayscaled, RGB_filtered; // connect image processor to vga
   wire [nX-1:0] X;  // connect  uart to vga
   wire [nY-1:0] Y;  // connect  uart to vga
   wire vga_write;  // connect uart to vga
 
-  uart_reciever_mock #(
-      .bits_per_pixel(bits_per_pixel),
-      .RESOLUTION(RESOLUTION),
-      .delay(delay),
-      .nX(nX),
-      .nY(nY)
-  ) u_uart_reciever_mock (
-      .uart     (1'bx),      // remember to connect
+  // uart
+  uart_receiver u_uart_receiver (
+      .uart     (uart),
       .clock    (clock),
       .resetn   (resetn),
       .RGB      (RGB),
@@ -51,6 +46,7 @@ module photobooth #(
       .vga_write(vga_write)
   );
 
+  // image processors
   inverter #(
       .bits_per_pixel(bits_per_pixel)
   ) u_inverter (
@@ -79,7 +75,7 @@ module photobooth #(
 
   assign RGB_processed = RGB_filtered;
 
-
+  // vga
   vga_adapter u_vga_adapter (
       .resetn     (resetn),
       .clock      (clock),

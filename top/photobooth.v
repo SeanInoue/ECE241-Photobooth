@@ -72,7 +72,7 @@ module photobooth #(
       .enable_red_filter  (enable_red_filter),
       .enable_blue_filter (enable_blue_filter),
       .enable_green_filter(enable_green_filter),
-      .RGB                (RGB),
+      .RGB                (RGB_grayscaled),
       .RGB_filtered       (RGB_filtered)
   );
 

@@ -1,4 +1,5 @@
-quartus/
+quartus/*
+!quartus/output_files/photobooth_top.sof
 work
 transcript
 *.wlf

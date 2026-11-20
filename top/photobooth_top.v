@@ -4,7 +4,7 @@ module photobooth_top #(
 ) (
     input  wire       CLOCK_50,
     input  wire [0:0] KEY,
-    input  wire [0:0] SW,
+    input  wire [1:0] SW,
     output wire [7:0] VGA_R,
     output wire [7:0] VGA_G,
     output wire [7:0] VGA_B,
@@ -22,6 +22,7 @@ module photobooth_top #(
       .resetn       (KEY[0]),
       .clock        (CLOCK_50),
       .enable_invert(SW[0]),
+		.enable_grayscale(SW[1]),
       .VGA_R        (VGA_R),
       .VGA_G        (VGA_G),
       .VGA_B        (VGA_B),

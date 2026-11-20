@@ -10,6 +10,9 @@ module photobooth #(
     input wire clock,
     input wire enable_invert,
     input wire enable_grayscale,
+    input wire enable_red_filter,
+    input wire enable_blue_filter,
+    input wire enable_green_filter,
 
     output wire [7:0] VGA_R,
     output wire [7:0] VGA_G,
@@ -26,7 +29,7 @@ module photobooth #(
 
 
   wire [bits_per_pixel-1:0] RGB;  // connect uart to processor
-  wire [bits_per_pixel-1:0] RGB_processed, RGB_inverted, RGB_grayscaled;  // connect processor to vga
+  wire [bits_per_pixel-1:0] RGB_processed, RGB_inverted, RGB_grayscaled, RGB_filtered;
   wire [nX-1:0] X;  // connect  uart to vga
   wire [nY-1:0] Y;  // connect  uart to vga
   wire vga_write;  // connect uart to vga
@@ -63,7 +66,17 @@ module photobooth #(
       .RGB_grayscaled  (RGB_grayscaled)
   );
 
-  assign RGB_processed = RGB_grayscaled;
+  rgb_filter #(
+      .bits_per_pixel(bits_per_pixel)
+  ) u_rgb_filter (
+      .enable_red_filter  (enable_red_filter),
+      .enable_blue_filter (enable_blue_filter),
+      .enable_green_filter(enable_green_filter),
+      .RGB                (RGB),
+      .RGB_filtered       (RGB_filtered)
+  );
+
+  assign RGB_processed = RGB_filtered;
 
 
   vga_adapter u_vga_adapter (

@@ -3,7 +3,7 @@ module photobooth_top #(
     parameter bits_per_pixel = 9
 ) (
     input  wire       CLOCK_50,
-    input wire HPS_UART_RX,
+    input  wire       HPS_UART_RX,
     input  wire [0:0] KEY,
     input  wire [9:0] SW,
     output wire [7:0] VGA_R,

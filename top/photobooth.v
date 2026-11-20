@@ -8,6 +8,7 @@ module photobooth #(
 ) (
     input wire resetn,
     input wire clock,
+    input wire uart,
     input wire enable_invert,
     input wire enable_grayscale,
     input wire enable_red_filter,

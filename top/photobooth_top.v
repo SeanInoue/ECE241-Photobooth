@@ -19,18 +19,18 @@ module photobooth_top #(
       .RESOLUTION(RESOLUTION),
       .bits_per_pixel(bits_per_pixel)
   ) u_photobooth (
-      .resetn       (KEY[0]),
-      .clock        (CLOCK_50),
-      .enable_invert(SW[0]),
-		.enable_grayscale(SW[1]),
-      .VGA_R        (VGA_R),
-      .VGA_G        (VGA_G),
-      .VGA_B        (VGA_B),
-      .VGA_HS       (VGA_HS),
-      .VGA_VS       (VGA_VS),
-      .VGA_BLANK_N  (VGA_BLANK_N),
-      .VGA_SYNC_N   (VGA_SYNC_N),
-      .VGA_CLK      (VGA_CLK)
+      .resetn          (KEY[0]),
+      .clock           (CLOCK_50),
+      .enable_invert   (SW[0]),
+      .enable_grayscale(SW[1]),
+      .VGA_R           (VGA_R),
+      .VGA_G           (VGA_G),
+      .VGA_B           (VGA_B),
+      .VGA_HS          (VGA_HS),
+      .VGA_VS          (VGA_VS),
+      .VGA_BLANK_N     (VGA_BLANK_N),
+      .VGA_SYNC_N      (VGA_SYNC_N),
+      .VGA_CLK         (VGA_CLK)
   );
 
 endmodule

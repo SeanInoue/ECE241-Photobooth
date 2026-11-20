@@ -4,7 +4,7 @@ module photobooth_top #(
 ) (
     input  wire       CLOCK_50,
     input  wire [0:0] KEY,
-    input  wire [1:0] SW,
+    input  wire [9:0] SW,
     output wire [7:0] VGA_R,
     output wire [7:0] VGA_G,
     output wire [7:0] VGA_B,
@@ -19,18 +19,21 @@ module photobooth_top #(
       .RESOLUTION(RESOLUTION),
       .bits_per_pixel(bits_per_pixel)
   ) u_photobooth (
-      .resetn          (KEY[0]),
-      .clock           (CLOCK_50),
-      .enable_invert   (SW[0]),
-      .enable_grayscale(SW[1]),
-      .VGA_R           (VGA_R),
-      .VGA_G           (VGA_G),
-      .VGA_B           (VGA_B),
-      .VGA_HS          (VGA_HS),
-      .VGA_VS          (VGA_VS),
-      .VGA_BLANK_N     (VGA_BLANK_N),
-      .VGA_SYNC_N      (VGA_SYNC_N),
-      .VGA_CLK         (VGA_CLK)
+      .resetn             (KEY[0]),
+      .clock              (CLOCK_50),
+      .enable_invert      (SW[0]),
+      .enable_grayscale   (SW[1]),
+      .enable_red_filter  (SW[2]),
+      .enable_blue_filter (SW[3]),
+      .enable_green_filter(SW[4]),
+      .VGA_R              (VGA_R),
+      .VGA_G              (VGA_G),
+      .VGA_B              (VGA_B),
+      .VGA_HS             (VGA_HS),
+      .VGA_VS             (VGA_VS),
+      .VGA_BLANK_N        (VGA_BLANK_N),
+      .VGA_SYNC_N         (VGA_SYNC_N),
+      .VGA_CLK            (VGA_CLK)
   );
 
 endmodule

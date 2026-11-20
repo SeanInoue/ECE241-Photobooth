@@ -36,7 +36,7 @@ module photobooth #(
   wire vga_write;  // connect uart to vga
 
   // uart
-  uart_reciever u_uart_reciever (
+  uart_receiver u_uart_receiver (
       .uart     (uart),
       .clock    (clock),
       .resetn   (resetn),

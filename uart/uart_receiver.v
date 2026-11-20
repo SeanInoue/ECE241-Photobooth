@@ -4,7 +4,7 @@
 // Pixels are 9 bits, {R[2:0], G[2:0], B[2:0]}, sent back to back MSB first and packed into
 // bytes, so 8 pixels take 9 bytes. There are no markers: every byte is data, and X and Y
 // wrap to (0, 0) after the last pixel of a frame. Reset the FPGA before starting the sender.
-module uart_reciever #(
+module uart_receiver #(
     parameter CLOCK_FREQUENCY = 50_000_000,
     parameter BAUD_RATE = 2_000_000,  // 25 clocks per bit at 50 MHz, must match sender.py
     parameter RESOLUTION = "640x480",

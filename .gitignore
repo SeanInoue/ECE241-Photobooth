@@ -1,5 +1,7 @@
-quartus/
+quartus/*
+!quartus/output_files/photobooth_top.sof
 work
 transcript
 *.wlf
+milestone1/
 tasks/

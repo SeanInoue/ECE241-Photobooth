@@ -2,7 +2,8 @@ module uart_reciever_mock #(
     parameter bits_per_pixel = 9,
     parameter RESOLUTION = "640x480",
     parameter nX = (RESOLUTION == "640x480") ? 10 : ((RESOLUTION == "320x240") ? 9 : 8),
-    parameter nY = (RESOLUTION == "640x480") ? 9 : ((RESOLUTION == "320x240") ? 8 : 7)
+    parameter nY = (RESOLUTION == "640x480") ? 9 : ((RESOLUTION == "320x240") ? 8 : 7),
+    parameter delay = 24_999_999
 ) (
     input wire uart,
     input wire clock,
@@ -21,10 +22,12 @@ module uart_reciever_mock #(
   reg [bits_per_pixel-1:0] COLOUR_C;
 
   wire halfSec;
-  halfSecondCounter u_halfSecondCounter (
-      .clock(clock),
-      .resetn   (resetn),
-      .halfSec (halfSec)
+  halfSecondCounter #(
+      .delay(delay)
+  ) u_halfSecondCounter (
+      .clock  (clock),
+      .resetn (resetn),
+      .halfSec(halfSec)
   );
 
   always @(posedge clock) begin
@@ -47,5 +50,37 @@ module uart_reciever_mock #(
   assign Y = Y_C;
   assign RGB = COLOUR_C;
   assign vga_write = 1;
+
+endmodule
+
+module halfSecondCounter #(
+    parameter delay = 25'd25_000_000 - 25'd1
+) (
+    input clock,
+    input resetn,  //reset on start
+    output reg halfSec
+);
+
+  reg [24:0] count;
+
+  always @(posedge clock) begin
+    if (!resetn) begin
+      count <= 25'b0;
+    end else begin
+      if (count >= delay) begin
+        count <= 25'b0;
+      end else begin
+        count <= count + 25'd1;
+      end
+    end
+  end
+
+  always @(*) begin
+    if (count == delay) begin
+      halfSec = 1'b1;
+    end else begin
+      halfSec = 1'b0;
+    end
+  end
 
 endmodule

@@ -3,6 +3,7 @@ quietly WaveActivateNextPane {} 0
 add wave -noupdate -label clock -radix binary /photobooth_tb/u_photobooth/clock
 add wave -noupdate -label resetn -radix binary /photobooth_tb/u_photobooth/resetn
 add wave -noupdate -label enable_invert -radix binary /photobooth_tb/u_photobooth/enable_invert
+add wave -noupdate -label enable_grayscale -radix binary /photobooth_tb/u_photobooth/enable_grayscale
 add wave -noupdate -divider pixel
 add wave -noupdate -label X -radix unsigned /photobooth_tb/u_photobooth/X
 add wave -noupdate -label Y -radix unsigned /photobooth_tb/u_photobooth/Y

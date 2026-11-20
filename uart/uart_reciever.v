@@ -56,8 +56,6 @@ module uart_reciever #(
       Y_C    <= 0;
       n_bits <= 0;
     end else if (byte_valid) begin
-      PREV_BYTE <= byte_data;
-
       if (total >= 9) begin
         RGB       <= pixel;
         X         <= X_C;
@@ -74,6 +72,8 @@ module uart_reciever #(
       end else begin
         n_bits <= total;
       end
+
+      PREV_BYTE <= byte_data;
     end
   end
 

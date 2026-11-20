@@ -1,7 +1,7 @@
 // Receives one 8N1 UART frame: start bit (low), 8 data bits LSB first, stop bit (high).
 // valid pulses for one clock when data holds a newly received byte.
 module uart_rx_byte #(
-    parameter CLKS_PER_BIT = 2604  // clock frequency / baud rate
+    parameter CLKS_PER_BIT = 25  // clock frequency / baud rate
 ) (
     input wire clock,
     input wire resetn,

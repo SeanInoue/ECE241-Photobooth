@@ -3,6 +3,7 @@ module photobooth_top #(
     parameter bits_per_pixel = 9
 ) (
     input  wire       CLOCK_50,
+    input wire HPS_UART_RX,
     input  wire [0:0] KEY,
     input  wire [9:0] SW,
     output wire [7:0] VGA_R,
@@ -21,11 +22,12 @@ module photobooth_top #(
   ) u_photobooth (
       .resetn             (KEY[0]),
       .clock              (CLOCK_50),
+      .uart               (HPS_UART_RX),
       .enable_invert      (SW[0]),
       .enable_grayscale   (SW[1]),
-      .enable_red_filter  (SW[2]),
-      .enable_blue_filter (SW[3]),
-      .enable_green_filter(SW[4]),
+      .enable_blue_filter (SW[2]),
+      .enable_green_filter(SW[3]),
+      .enable_red_filter  (SW[4]),
       .VGA_R              (VGA_R),
       .VGA_G              (VGA_G),
       .VGA_B              (VGA_B),

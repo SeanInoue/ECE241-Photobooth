@@ -8,8 +8,11 @@ tasks/
 .venv
 
 incremental_db/
-output_files/ 
+output_files/
+!output_files/photobooth_top.sof
+
 db/
 greybox_tmp/
 .qsys_edit/
 *.bak
+c5_pin_model_dump.txt

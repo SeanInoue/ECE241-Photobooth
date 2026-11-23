@@ -86,24 +86,6 @@ module photobooth #(
       .display_write    (display_write)
   );
 
-  // filter enable logic
-  wire [4:0] enable_i = {
-    enable_invert, enable_grayscale, enable_red_filter, enable_blue_filter, enable_green_filter
-  };
-  wire [4:0] enable_o;
-  wire enable_invert_frame, enable_grayscale_frame, enable_red_filter_frame, enable_blue_filter_frame, enable_green_filter_frame;
-  assign {enable_invert_frame, enable_grayscale_frame, enable_red_filter_frame, enable_blue_filter_frame, enable_green_filter_frame} = enable_o;
-
-  filter_enable_reg #(
-      .RESOLUTION(RESOLUTION)
-  ) u_filter_enable_reg (
-      .clock    (clock),
-      .resetn   (resetn),
-      .uart_read(vga_write),
-      .enable_i (enable_i),
-      .enable_o (enable_o)
-  );
-
   // image processors
   inverter #(
       .bits_per_pixel(bits_per_pixel)

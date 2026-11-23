@@ -15,7 +15,7 @@
 // Uses the supported 160 x 120 resolution to check row and frame wrapping.
 module testbench;
   localparam CLOCK_PERIOD = 20;
-  localparam CLKS_PER_BIT = 25;
+  localparam CLKS_PER_BIT = 17;
   localparam BIT_PERIOD = CLOCK_PERIOD * CLKS_PER_BIT;
   localparam COLS = 160;
   localparam ROWS = 120;
@@ -56,7 +56,7 @@ module testbench;
   );
 
   uart_reciever #(
-      .CLOCK_FREQUENCY(50_000_000), .BAUD_RATE(2_000_000),
+      .CLOCK_FREQUENCY(50_000_000), .BAUD_RATE(3_000_000),
       .RESOLUTION("160x120")
   ) dut_pixels (
       .clock(clock), .resetn(resetn), .uart(uart),

@@ -6,7 +6,7 @@
 // wrap to (0, 0) after the last pixel of a frame. Reset the FPGA before starting the sender.
 module uart_receiver #(
     parameter CLOCK_FREQUENCY = 50_000_000,
-    parameter BAUD_RATE = 2_000_000,  // 25 clocks per bit at 50 MHz, must match sender.py
+    parameter BAUD_RATE = 3_000_000,  // 25 clocks per bit at 50 MHz, must match sender.py
     parameter RESOLUTION = "640x480",
     parameter bits_per_pixel = 9,  // the unpacking below only works for 9
     parameter nX = (RESOLUTION == "640x480") ? 10 : ((RESOLUTION == "320x240") ? 9 : 8),

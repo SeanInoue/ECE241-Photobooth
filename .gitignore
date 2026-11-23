@@ -6,3 +6,10 @@ transcript
 milestone1/
 tasks/
 .venv
+
+incremental_db/
+output_files/ 
+db/
+greybox_tmp/
+.qsys_edit/
+*.bak

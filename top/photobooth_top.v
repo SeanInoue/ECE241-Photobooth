@@ -29,20 +29,23 @@ module photobooth_top #(
 
   assign DRAM_CLK = CLOCK_50;
 
+  wire [24:0] mem_address;
+  wire [15:0] mem_writedata, mem_readdata;
+  wire mem_write, mem_read, mem_readdatavalid, mem_waitrequest;
+
   // Platform Designer system sdram_system exports clk, reset, mem, and sdram.
-  // Park the memory port until the frame buffer logic drives it.
   sdram_system u_sdram_system (
       .clk_clk          (CLOCK_50),
       .reset_reset_n    (KEY[0]),
-      .mem_address      (25'd0),
-      .mem_byteenable_n (2'b11),
-      .mem_chipselect   (1'b0),
-      .mem_writedata    (16'd0),
-      .mem_read_n       (1'b1),
-      .mem_write_n      (1'b1),
-      .mem_readdata     (),
-      .mem_readdatavalid(),
-      .mem_waitrequest  (),
+      .mem_address      (mem_address),
+      .mem_byteenable_n (2'b00),
+      .mem_chipselect   (mem_read | mem_write),
+      .mem_writedata    (mem_writedata),
+      .mem_read_n       (~mem_read),
+      .mem_write_n      (~mem_write),
+      .mem_readdata     (mem_readdata),
+      .mem_readdatavalid(mem_readdatavalid),
+      .mem_waitrequest  (mem_waitrequest),
       .sdram_addr       (DRAM_ADDR),
       .sdram_ba         (DRAM_BA),
       .sdram_cas_n      (DRAM_CAS_N),
@@ -66,6 +69,13 @@ module photobooth_top #(
       .enable_blue_filter (SW[2]),
       .enable_green_filter(SW[3]),
       .enable_red_filter  (SW[4]),
+      .mem_address        (mem_address),
+      .mem_writedata      (mem_writedata),
+      .mem_write          (mem_write),
+      .mem_read           (mem_read),
+      .mem_readdata       (mem_readdata),
+      .mem_waitrequest    (mem_waitrequest),
+      .mem_readdatavalid  (mem_readdatavalid),
       .VGA_R              (VGA_R),
       .VGA_G              (VGA_G),
       .VGA_B              (VGA_B),

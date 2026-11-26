@@ -1,0 +1,29 @@
+C:/Users/Sihao/Documents/Code/school/ECE241/ECE241-Photobooth/top/photobooth_top.v {1 {vlog -work work -stats=none C:/Users/Sihao/Documents/Code/school/ECE241/ECE241-Photobooth/top/photobooth_top.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module photobooth_top
+
+Top level modules:
+	photobooth_top
+
+} {} {}} C:/Users/Sihao/Documents/Code/school/ECE241/ECE241-Photobooth/top/sdram_frame_buffer.v {1 {vlog -work work -stats=none C:/Users/Sihao/Documents/Code/school/ECE241/ECE241-Photobooth/top/sdram_frame_buffer.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module sdram_frame_buffer
+
+Top level modules:
+	sdram_frame_buffer
+
+} {} {}} C:/Users/Sihao/Documents/Code/school/ECE241/ECE241-Photobooth/top/photobooth.v {1 {vlog -work work -stats=none C:/Users/Sihao/Documents/Code/school/ECE241/ECE241-Photobooth/top/photobooth.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module photobooth
+
+Top level modules:
+	photobooth
+
+} {} {}} C:/Users/Sihao/Documents/Code/school/ECE241/ECE241-Photobooth/top/sdram_frame_buffer_tb.sv {1 {vlog -work work -sv -stats=none C:/Users/Sihao/Documents/Code/school/ECE241/ECE241-Photobooth/top/sdram_frame_buffer_tb.sv
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module sdram_frame_buffer_tb
+
+Top level modules:
+	sdram_frame_buffer_tb
+
+} {} {}}

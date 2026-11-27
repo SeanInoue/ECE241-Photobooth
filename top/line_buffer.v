@@ -38,7 +38,7 @@ module line_buffer #(
   reg [bits_per_pixel-1:0] line_buf2[0:COLS-1];
   reg [bits_per_pixel-1:0] line_buf3[0:COLS-1];
 
-  reg [8:0] buffer_x;
+  reg [9:0] buffer_x;
   reg [1:0] buffer_y;
   reg buffer_ready;
   reg sdram_done;

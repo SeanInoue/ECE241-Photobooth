@@ -10,6 +10,7 @@ module line_buffer #(
 ) (
 
     input wire clock,
+    input wire resetn,
     input wire [bits_per_pixel-1:0] sdram_rgb,
     input wire [nX-1:0] display_x,
     input wire [nY-1:0] display_y,
@@ -43,51 +44,61 @@ module line_buffer #(
   reg sdram_done;
 
   always @(posedge clock) begin
-    if (display_write) begin
-      // counter logic
-      if (buffer_x == COLS - 1) begin
-        buffer_x <= 0;
-        if (buffer_y == 3) begin
-          buffer_y <= 0;
+    if (!resetn) begin
+      buffer_x <= 0;
+      buffer_y <= 0;
+      buffer_ready <= 0;
+      sdram_done <= 0;
+    end else begin
+
+      if (display_write) begin
+        // counter logic
+        if (buffer_x == COLS - 1) begin
+          buffer_x <= 0;
+          if (buffer_y == 3) begin
+            buffer_y <= 0;
+          end else begin
+            buffer_y <= buffer_y + 1;
+          end
         end else begin
-          buffer_y <= buffer_y + 1;
+          buffer_x <= buffer_x + 1;
         end
-      end else begin
-        buffer_x <= buffer_x + 1;
+
+        // write to buffer
+        case (buffer_y)
+          2'd0: line_buf0[buffer_x] <= sdram_rgb;
+          2'd1: line_buf1[buffer_x] <= sdram_rgb;
+          2'd2: line_buf2[buffer_x] <= sdram_rgb;
+          2'd3: line_buf3[buffer_x] <= sdram_rgb;
+          default: ;
+        endcase
       end
 
-      // write to buffer
-      case (buffer_y)
-        2'd0: line_buf0[buffer_x] <= sdram_rgb;
-        2'd1: line_buf1[buffer_x] <= sdram_rgb;
-        2'd2: line_buf2[buffer_x] <= sdram_rgb;
-        2'd3: line_buf3[buffer_x] <= sdram_rgb;
-        default: ;
-      endcase
-    end
+      if (display_y == 1 && display_x == 1) begin
+        buffer_ready <= 1;
+      end else if (display_y == ROWS - 1 && display_x == COLS - 1) begin
+        buffer_ready <= 0;
+        sdram_done   <= 1;
+      end
 
-    if (display_y == 1 && display_x == 1) begin
-      buffer_ready <= 1;
-    end else if (display_y == ROWS - 1 && display_x == COLS - 1) begin
-      buffer_ready <= 0;
-      sdram_done   <= 1;
-    end
-
-    if (vga_write_real && vga_x == COLS - 1 && vga_y == ROWS - 1) begin
-      sdram_done <= 0;
+      if (vga_write_real && vga_x == COLS - 1 && vga_y == ROWS - 1) begin
+        sdram_done <= 0;
+      end
     end
   end
 
-  assign vga_write_real = display_write & buffer_ready || sdram_done; //TODO or buffer full and display_write off
+  assign vga_write_real = display_write & buffer_ready || sdram_done;
 
   // counter
   always @(posedge clock) begin
-    if (vga_write_real) begin
+    if (!resetn) begin
+      vga_x <= 0;
+      vga_y <= 0;
+    end else if (vga_write_real) begin
       if (vga_x == COLS - 1) begin
         vga_x <= 0;
         if (vga_y == ROWS - 1) begin
           vga_y <= 0;
-          sdram_done <= 1'b0;
         end else begin
           vga_y <= vga_y + 1'b1;
         end

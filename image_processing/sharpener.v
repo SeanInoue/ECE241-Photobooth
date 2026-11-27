@@ -2,41 +2,46 @@ module sharpener #(
     parameter RESOLUTION = "640x480",
     parameter nX = (RESOLUTION == "640x480") ? 10 : ((RESOLUTION == "320x240") ? 9 : 8),
     parameter nY = (RESOLUTION == "640x480") ? 9 : ((RESOLUTION == "320x240") ? 8 : 7),
-    parameter num_pixels = 307_200,
-    parameter bits_per_pixel = 9
+    parameter bits_per_pixel = 9,
+    parameter bits_per_channel = bits_per_pixel / 3,
+    parameter bpc_sum = 6,  // 3'b111 * d5 = 6
+    parameter bpc = bits_per_channel
 ) (
     input wire clock,
-    input wire resetn,
     input wire enable_sharpen,
-    input wire [15:0] mem_readdata,
-    input reg [nX-1:0] X,
-    input reg [nY-1:0] Y,
-    input wire [bits_per_pixel-1:0] RGB,
-    output reg [bits_per_pixel-1:0] RGB_sharpened
+    input wire [bpc_sum*3-1:0] RGB_blurred,
+    input wire [bits_per_pixel-1:0] window_1_1,
+
+    output reg [bits_per_pixel:0] RGB_sharpened
 );
-  parameter ROWS = 4;    //actually 3
-  parameter COLS = 480;
-  reg [bits_per_pixel-1:0] buffer[0:ROWS-1][0:COLS-1];
 
-  wire [bits_per_pixel-1:0] sdram_rgb = mem_readdata;
+  integer i;
+  reg [(bpc_sum+1)-1*3:0] multiple;
+  reg [(bpc_sum+1)-1*3:0] negative_blur;
+  reg [(bpc_sum+1)-1*3:0] sum;
 
-  reg [nX-1:0] X_C;
-  reg [nY-1:0] Y_C;
+  always @(*) begin
+    for (i = 0; i < 3; i = i + 1) begin
+      negative_blur[(bpc_sum+1)*i+:(bpc_sum+1)] = {1'b1, ~RGB_blurred[bpc_sum*i+:bpc_sum]} + 1'b1;
+      multiple[(bpc_sum+1)*i+:(bpc_sum+1)] = window_1_1[bpc*i+:bpc] * 6;
+      sum[(bpc_sum+1)*i+:(bpc_sum+1)] = multiple[(bpc_sum+1)*i+:(bpc_sum+1)] + negative_blur[(bpc_sum+1)*i+:(bpc_sum+1)];
+    end
 
-  //sdram -> buffer including second row first columns
-  //TODO: add start condition, count backwards from start of real vga write
-  always @(posedge clock) begin
-
-  end
-
-  //sdram -> buffer rest of the rows at the same time as real vga_write
-
-  //buffer shift last row to first when done convolving last row
-
-  //
-
-  always @(posedge clock) begin
-
+    if (enable_sharpen) begin
+      for (i = 0; i < 3; i = i + 1) begin  //todo: add corners properly, fix latches synthesis
+        if (sum[(bpc_sum+1)*(i+1)-1]) begin  //if negative
+          RGB_sharpened[bpc*i+:bpc] = 0;
+        end else if (sum[(bpc_sum+1)*i+:(bpc_sum+1)-1] > 3'b111) begin  //if greater than max
+          RGB_sharpened[bpc*i+:bpc] = 3'b111;
+        end else begin
+          RGB_sharpened[bpc*i+:bpc] = sum[(bpc_sum+1)*i+:(bpc_sum+1)];
+        end
+      end
+    end else begin
+      for (i = 0; i < 3; i = i + 1) begin
+        RGB_sharpened[bpc*i+:bpc] = RGB_blurred[bpc_sum*i+:bpc_sum];
+      end
+    end
   end
 
 endmodule

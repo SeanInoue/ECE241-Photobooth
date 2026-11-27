@@ -113,10 +113,12 @@ module line_buffer #(
   reg [bits_per_pixel-1:0] window_2[0:2];
 
   always @(posedge clock) begin
-    if (display_x == 0 && display_y == 0) window_1[1] <= sdram_rgb;
-    if (display_x == 1 && display_y == 0) window_1[2] <= sdram_rgb;
-    if (display_x == 0 && display_y == 1) window_2[1] <= sdram_rgb;
-    if (display_x == 1 && display_y == 1) window_2[2] <= sdram_rgb;
+    if (display_write) begin
+      if (display_x == 0 && display_y == 0) window_1[1] <= sdram_rgb;
+      if (display_x == 1 && display_y == 0) window_1[2] <= sdram_rgb;
+      if (display_x == 0 && display_y == 1) window_2[1] <= sdram_rgb;
+      if (display_x == 1 && display_y == 1) window_2[2] <= sdram_rgb;
+    end
 
     if (vga_write_real) begin
       if (vga_y < ROWS - 2 || vga_y == ROWS - 2 && vga_x < COLS - 2) begin

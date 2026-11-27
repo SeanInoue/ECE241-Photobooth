@@ -7,7 +7,6 @@ module sharpener #(
     parameter bpc_sum = 6,  // 3'b111 * d5 = 6
     parameter bpc = bits_per_channel
 ) (
-    input wire clock,
     input wire enable_sharpen,
     input wire [bpc_sum*3-1:0] RGB_blurred,
     input wire [bits_per_pixel-1:0] window_1_1,

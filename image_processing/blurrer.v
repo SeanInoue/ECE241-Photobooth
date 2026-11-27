@@ -8,7 +8,6 @@ module blurrer #(
     parameter bpc = bits_per_channel
 
 ) (
-    input wire clock,
     input wire enable_sharpen,
     input wire enable_blur,
     input wire [bits_per_pixel-1:0] window_0_0,

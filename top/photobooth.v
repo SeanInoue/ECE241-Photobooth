@@ -14,6 +14,8 @@ module photobooth #(
     input wire enable_red_filter,
     input wire enable_blue_filter,
     input wire enable_green_filter,
+    input wire enable_sharpen,
+    input wire enable_blur,
 
     output wire [24:0] mem_address,
     output wire [15:0] mem_writedata,
@@ -36,7 +38,8 @@ module photobooth #(
   localparam COLS = (RESOLUTION == "640x480") ? 640 : ((RESOLUTION == "320x240") ? 320 : 160);
   localparam ROWS = (RESOLUTION == "640x480") ? 480 : ((RESOLUTION == "320x240") ? 240 : 120);
 
-  wire [bits_per_pixel-1:0] uart_rgb, RGB_inverted, RGB_grayscaled, RGB_filtered;
+  wire [bits_per_pixel-1:0] uart_rgb, RGB_sharpened, RGB_inverted, RGB_grayscaled, RGB_filtered;
+  wire [              17:0] RGB_blurred;
   wire [bits_per_pixel-1:0] sdram_rgb = mem_readdata;
   wire [nX-1:0] uart_x, display_x, vga_x;
   wire [nY-1:0] uart_y, display_y, vga_y;
@@ -124,10 +127,30 @@ module photobooth #(
       .vga_write_real(vga_write_real)
   );
 
-
-  //   blurrer u_blurrer (.window(window));
-
   // image processors
+  blurrer u_blurrer (
+      .enable_sharpen(enable_sharpen),
+      .enable_blur   (enable_blur),
+      .window_0_0    (window_0_0),
+      .window_0_0    (window_0_0),
+      .window_0_1    (window_0_1),
+      .window_0_2    (window_0_2),
+      .window_1_0    (window_1_0),
+      .window_1_1    (window_1_1),
+      .window_1_2    (window_1_2),
+      .window_2_0    (window_2_0),
+      .window_2_1    (window_2_1),
+      .window_2_2    (window_2_2),
+      .RGB_blurred   (RGB_blurred)
+  );
+
+  sharpener u_sharpener (
+      .enable_sharpen(enable_sharpen),
+      .RGB_blurred   (RGB_blurred),
+      .window_1_1    (window_1_1),
+      .RGB_sharpened (RGB_sharpened)
+  );
+
   inverter #(
       .bits_per_pixel(bits_per_pixel)
   ) u_inverter (

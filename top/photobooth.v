@@ -14,6 +14,8 @@ module photobooth #(
     input wire enable_red_filter,
     input wire enable_blue_filter,
     input wire enable_green_filter,
+    input wire enable_sharpen,
+    input wire enable_blur,
 
     output wire [24:0] mem_address,
     output wire [15:0] mem_writedata,
@@ -36,12 +38,23 @@ module photobooth #(
   localparam COLS = (RESOLUTION == "640x480") ? 640 : ((RESOLUTION == "320x240") ? 320 : 160);
   localparam ROWS = (RESOLUTION == "640x480") ? 480 : ((RESOLUTION == "320x240") ? 240 : 120);
 
-  wire [bits_per_pixel-1:0] uart_rgb, RGB_inverted, RGB_grayscaled, RGB_filtered;
+  wire [bits_per_pixel-1:0] uart_rgb, RGB_sharpened, RGB_inverted, RGB_grayscaled, RGB_filtered;
+  wire [              17:0] RGB_blurred;
   wire [bits_per_pixel-1:0] sdram_rgb = mem_readdata;
-  wire [nX-1:0] uart_x, display_x;
-  wire [nY-1:0] uart_y, display_y;
-  wire uart_pixel_valid, display_write;
+  wire [nX-1:0] uart_x, display_x, vga_x;
+  wire [nY-1:0] uart_y, display_y, vga_y;
+  wire uart_pixel_valid, display_write, vga_write_real;
   wire [4:0] frame_effects;
+
+  wire [bits_per_pixel-1:0] window_0_0;
+  wire [bits_per_pixel-1:0] window_0_1;
+  wire [bits_per_pixel-1:0] window_0_2;
+  wire [bits_per_pixel-1:0] window_1_0;
+  wire [bits_per_pixel-1:0] window_1_1;
+  wire [bits_per_pixel-1:0] window_1_2;
+  wire [bits_per_pixel-1:0] window_2_0;
+  wire [bits_per_pixel-1:0] window_2_1;
+  wire [bits_per_pixel-1:0] window_2_2;
 
   // uart
   uart_receiver #(
@@ -66,32 +79,83 @@ module photobooth #(
       .nY(nY),
       .bits_per_pixel(bits_per_pixel)
   ) u_frame_buffer (
-      .clock            (clock),
-      .resetn           (resetn),
-      .pixel_valid      (uart_pixel_valid),
-      .pixel            (uart_rgb),
-      .pixel_x          (uart_x),
-      .pixel_y          (uart_y),
-      .switches         ({enable_red_filter, enable_green_filter, enable_blue_filter,
-                          enable_grayscale, enable_invert}),
-      .frame_effects    (frame_effects),
-      .mem_address      (mem_address),
-      .mem_writedata    (mem_writedata),
-      .mem_write        (mem_write),
-      .mem_read         (mem_read),
-      .mem_waitrequest  (mem_waitrequest),
+      .clock(clock),
+      .resetn(resetn),
+      .pixel_valid(uart_pixel_valid),
+      .pixel(uart_rgb),
+      .pixel_x(uart_x),
+      .pixel_y(uart_y),
+      .switches({
+        enable_red_filter, enable_green_filter, enable_blue_filter, enable_grayscale, enable_invert
+      }),
+      .frame_effects(frame_effects),
+      .mem_address(mem_address),
+      .mem_writedata(mem_writedata),
+      .mem_write(mem_write),
+      .mem_read(mem_read),
+      .mem_waitrequest(mem_waitrequest),
       .mem_readdatavalid(mem_readdatavalid),
-      .display_x        (display_x),
-      .display_y        (display_y),
-      .display_write    (display_write)
+      .display_x(display_x),
+      .display_y(display_y),
+      .display_write(display_write)
+  );
+
+  line_buffer #(
+      .RESOLUTION(RESOLUTION),
+      .bits_per_pixel(bits_per_pixel),
+      .nX(nX),
+      .nY(nY),
+      .COLS(COLS),
+      .ROWS(ROWS)
+  ) u_line_buffer (
+      .clock         (clock),
+      .resetn        (resetn),
+      .sdram_rgb     (sdram_rgb),
+      .display_x     (display_x),
+      .display_y     (display_y),
+      .display_write (display_write),
+      .window_0_0    (window_0_0),
+      .window_0_1    (window_0_1),
+      .window_0_2    (window_0_2),
+      .window_1_0    (window_1_0),
+      .window_1_1    (window_1_1),
+      .window_1_2    (window_1_2),
+      .window_2_0    (window_2_0),
+      .window_2_1    (window_2_1),
+      .window_2_2    (window_2_2),
+      .vga_x         (vga_x),
+      .vga_y         (vga_y),
+      .vga_write_real(vga_write_real)
   );
 
   // image processors
+  blurrer u_blurrer (
+      .enable_sharpen(enable_sharpen),
+      .enable_blur   (enable_blur),
+      .window_0_0    (window_0_0),
+      .window_0_1    (window_0_1),
+      .window_0_2    (window_0_2),
+      .window_1_0    (window_1_0),
+      .window_1_1    (window_1_1),
+      .window_1_2    (window_1_2),
+      .window_2_0    (window_2_0),
+      .window_2_1    (window_2_1),
+      .window_2_2    (window_2_2),
+      .RGB_blurred   (RGB_blurred)
+  );
+
+  sharpener u_sharpener (
+      .enable_sharpen(enable_sharpen),
+      .RGB_blurred   (RGB_blurred),
+      .window_1_1    (window_1_1),
+      .RGB_sharpened (RGB_sharpened)
+  );
+
   inverter #(
       .bits_per_pixel(bits_per_pixel)
   ) u_inverter (
-      .enable_invert(frame_effects[0]), // could use filter_enable_reg module as well
-      .RGB          (sdram_rgb),
+      .enable_invert(frame_effects[0]),  // could use filter_enable_reg module as well
+      .RGB          (RGB_sharpened),
       .RGB_inverted (RGB_inverted)
   );
 
@@ -118,9 +182,9 @@ module photobooth #(
       .resetn     (resetn),
       .clock      (clock),
       .color      (RGB_filtered),
-      .x          (display_x),
-      .y          (display_y),
-      .write      (display_write),
+      .x          (vga_x),
+      .y          (vga_y),
+      .write      (vga_write_real),
       .VGA_R      (VGA_R),
       .VGA_G      (VGA_G),
       .VGA_B      (VGA_B),

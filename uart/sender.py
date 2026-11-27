@@ -12,7 +12,7 @@ import cv2
 import numpy as np
 import serial
 
-PORT, BAUD = "COM3", 3_000_000  # must match BAUD_RATE in uart_reciever.v
+PORT, BAUD = "COM10", 3_000_000  # must match BAUD_RATE in uart_reciever.v
 W, H = 640, 480                 # must match RESOLUTION
 
 ser = serial.Serial(PORT, BAUD)

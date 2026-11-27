@@ -128,54 +128,54 @@ module photobooth #(
       .vga_write_real(vga_write_real)
   );
 
-  //   // image processors
-  //   blurrer u_blurrer (
-  //       .enable_sharpen(enable_sharpen),
-  //       .enable_blur   (enable_blur),
-  //       .window_0_0    (window_0_0),
-  //       .window_0_1    (window_0_1),
-  //       .window_0_2    (window_0_2),
-  //       .window_1_0    (window_1_0),
-  //       .window_1_1    (window_1_1),
-  //       .window_1_2    (window_1_2),
-  //       .window_2_0    (window_2_0),
-  //       .window_2_1    (window_2_1),
-  //       .window_2_2    (window_2_2),
-  //       .RGB_blurred   (RGB_blurred)
-  //   );
+  // image processors
+  blurrer u_blurrer (
+      .enable_sharpen(enable_sharpen),
+      .enable_blur   (enable_blur),
+      .window_0_0    (window_0_0),
+      .window_0_1    (window_0_1),
+      .window_0_2    (window_0_2),
+      .window_1_0    (window_1_0),
+      .window_1_1    (window_1_1),
+      .window_1_2    (window_1_2),
+      .window_2_0    (window_2_0),
+      .window_2_1    (window_2_1),
+      .window_2_2    (window_2_2),
+      .RGB_blurred   (RGB_blurred)
+  );
 
-  //   sharpener u_sharpener (
-  //       .enable_sharpen(enable_sharpen),
-  //       .RGB_blurred   (RGB_blurred),
-  //       .window_1_1    (window_1_1),
-  //       .RGB_sharpened (RGB_sharpened)
-  //   );
+  sharpener u_sharpener (
+      .enable_sharpen(enable_sharpen),
+      .RGB_blurred   (RGB_blurred),
+      .window_1_1    (window_1_1),
+      .RGB_sharpened (RGB_sharpened)
+  );
 
-  //   inverter #(
-  //       .bits_per_pixel(bits_per_pixel)
-  //   ) u_inverter (
-  //       .enable_invert(frame_effects[0]),  // could use filter_enable_reg module as well
-  //       .RGB          (RGB_sharpened),
-  //       .RGB_inverted (RGB_inverted)
-  //   );
+  inverter #(
+      .bits_per_pixel(bits_per_pixel)
+  ) u_inverter (
+      .enable_invert(frame_effects[0]),  // could use filter_enable_reg module as well
+      .RGB          (RGB_sharpened),
+      .RGB_inverted (RGB_inverted)
+  );
 
-  //   grayscaler #(
-  //       .bits_per_pixel(bits_per_pixel)
-  //   ) u_grayscaler (
-  //       .enable_grayscale(frame_effects[1]),
-  //       .RGB             (RGB_inverted),
-  //       .RGB_grayscaled  (RGB_grayscaled)
-  //   );
+  grayscaler #(
+      .bits_per_pixel(bits_per_pixel)
+  ) u_grayscaler (
+      .enable_grayscale(frame_effects[1]),
+      .RGB             (RGB_inverted),
+      .RGB_grayscaled  (RGB_grayscaled)
+  );
 
-  //   rgb_filter #(
-  //       .bits_per_pixel(bits_per_pixel)
-  //   ) u_rgb_filter (
-  //       .enable_red_filter  (frame_effects[4]),
-  //       .enable_blue_filter (frame_effects[2]),
-  //       .enable_green_filter(frame_effects[3]),
-  //       .RGB                (RGB_grayscaled),
-  //       .RGB_filtered       (RGB_filtered)
-  //   );
+  rgb_filter #(
+      .bits_per_pixel(bits_per_pixel)
+  ) u_rgb_filter (
+      .enable_red_filter  (frame_effects[4]),
+      .enable_blue_filter (frame_effects[2]),
+      .enable_green_filter(frame_effects[3]),
+      .RGB                (RGB_grayscaled),
+      .RGB_filtered       (RGB_filtered)
+  );
 
   // vga
   vga_adapter u_vga_adapter (

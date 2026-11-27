@@ -28,7 +28,7 @@ module sharpener #(
     end
 
     if (enable_sharpen) begin
-      for (i = 0; i < 3; i = i + 1) begin  //todo: add corners properly, fix latches synthesis
+      for (i = 0; i < 3; i = i + 1) begin
         if (sum[(bpc_sum+1)*(i+1)-1]) begin  //if negative
           RGB_sharpened[bpc*i+:bpc] = 0;
         end else if (sum[(bpc_sum+1)*i+:(bpc_sum+1)-1] > 3'b111) begin  //if greater than max

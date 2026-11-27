@@ -181,7 +181,7 @@ module photobooth #(
   vga_adapter u_vga_adapter (
       .resetn     (resetn),
       .clock      (clock),
-      .color      (window_1_1),
+      .color      (RGB_filtered),
       .x          (vga_x),
       .y          (vga_y),
       .write      (vga_write_real),

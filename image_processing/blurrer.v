@@ -11,7 +11,6 @@ module blurrer #(
     input wire enable_sharpen,
     input wire enable_blur,
     input wire [bits_per_pixel-1:0] window_0_0,
-    input wire [bits_per_pixel-1:0] window_0_0,
     input wire [bits_per_pixel-1:0] window_0_1,
     input wire [bits_per_pixel-1:0] window_0_2,
     input wire [bits_per_pixel-1:0] window_1_0,
@@ -34,7 +33,7 @@ module blurrer #(
       end
     end else begin
       for (i = 0; i < 3; i = i + 1) begin
-        sum[bpc_sum*i+:bpc_sum] = window_1_1;
+        sum[bpc_sum*i+:bpc_sum] = window_1_1[bpc*i +: bpc];
       end
     end
   end

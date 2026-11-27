@@ -132,7 +132,6 @@ module photobooth #(
       .enable_sharpen(enable_sharpen),
       .enable_blur   (enable_blur),
       .window_0_0    (window_0_0),
-      .window_0_0    (window_0_0),
       .window_0_1    (window_0_1),
       .window_0_2    (window_0_2),
       .window_1_0    (window_1_0),
@@ -155,7 +154,7 @@ module photobooth #(
       .bits_per_pixel(bits_per_pixel)
   ) u_inverter (
       .enable_invert(frame_effects[0]),  // could use filter_enable_reg module as well
-      .RGB          (sdram_rgb),
+      .RGB          (RGB_sharpened),
       .RGB_inverted (RGB_inverted)
   );
 

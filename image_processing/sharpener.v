@@ -11,13 +11,13 @@ module sharpener #(
     input wire [bpc_sum*3-1:0] RGB_blurred,
     input wire [bits_per_pixel-1:0] window_1_1,
 
-    output reg [bits_per_pixel:0] RGB_sharpened
+    output reg [bits_per_pixel-1:0] RGB_sharpened
 );
 
   integer i;
-  reg [(bpc_sum+1)-1*3:0] multiple;
-  reg [(bpc_sum+1)-1*3:0] negative_blur;
-  reg [(bpc_sum+1)-1*3:0] sum;
+  reg [(bpc_sum+1)*3-1:0] multiple;
+  reg [(bpc_sum+1)*3-1:0] negative_blur;
+  reg [(bpc_sum+1)*3-1:0] sum;
 
   always @(*) begin
     for (i = 0; i < 3; i = i + 1) begin

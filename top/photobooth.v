@@ -150,88 +150,90 @@ module photobooth #(
     end
   end
 
-  reg [bits_per_pixel-1:0] window[0:2][0:2];
+  reg [bits_per_pixel-1:0] window_0[0:2];
+  reg [bits_per_pixel-1:0] window_1[0:2];
+  reg [bits_per_pixel-1:0] window_2[0:2];
 
   always @(posedge clock) begin
-    if (display_x == 0 && display_y == 0) window[1][1] <= sdram_rgb;
-    if (display_x == 1 && display_y == 0) window[1][2] <= sdram_rgb;
-    if (display_x == 0 && display_y == 1) window[2][1] <= sdram_rgb;
-    if (display_x == 1 && display_y == 1) window[2][2] <= sdram_rgb;
+    if (display_x == 0 && display_y == 0) window_1[1] <= sdram_rgb;
+    if (display_x == 1 && display_y == 0) window_1[2] <= sdram_rgb;
+    if (display_x == 0 && display_y == 1) window_2[1] <= sdram_rgb;
+    if (display_x == 1 && display_y == 1) window_2[2] <= sdram_rgb;
 
     if (vga_write_real) begin
       if (vga_y < ROWS - 2 || vga_y == ROWS - 2 && vga_x < COLS - 2) begin
         case (buffer_y)
           2'd0: begin
-            window[0][2] <= line_buf2[buffer_x];
-            window[1][2] <= line_buf3[buffer_x];
-            window[2][2] <= sdram_rgb;
+            window_0[2] <= line_buf2[buffer_x];
+            window_1[2] <= line_buf3[buffer_x];
+            window_2[2] <= sdram_rgb;
           end
           2'd1: begin
-            window[0][2] <= line_buf3[buffer_x];
-            window[1][2] <= line_buf0[buffer_x];
-            window[2][2] <= sdram_rgb;
+            window_0[2] <= line_buf3[buffer_x];
+            window_1[2] <= line_buf0[buffer_x];
+            window_2[2] <= sdram_rgb;
           end
           2'd2: begin
-            window[0][2] <= line_buf0[buffer_x];
-            window[1][2] <= line_buf1[buffer_x];
-            window[2][2] <= sdram_rgb;
+            window_0[2] <= line_buf0[buffer_x];
+            window_1[2] <= line_buf1[buffer_x];
+            window_2[2] <= sdram_rgb;
           end
           2'd3: begin
-            window[0][2] <= line_buf1[buffer_x];
-            window[1][2] <= line_buf2[buffer_x];
-            window[2][2] <= sdram_rgb;
+            window_0[2] <= line_buf1[buffer_x];
+            window_1[2] <= line_buf2[buffer_x];
+            window_2[2] <= sdram_rgb;
           end
           default: ;
         endcase
       end else if (vga_y == ROWS - 1 && vga_x < COLS - 2) begin //last row up to r away from right edge
         case (buffer_y)
           2'd0: begin
-            window[0][2] <= line_buf2[vga_x+2];
-            window[1][2] <= line_buf3[vga_x+2];
+            window_0[2] <= line_buf2[vga_x+2];
+            window_1[2] <= line_buf3[vga_x+2];
           end
           2'd1: begin
-            window[0][2] <= line_buf3[vga_x+2];
-            window[1][2] <= line_buf0[vga_x+2];
+            window_0[2] <= line_buf3[vga_x+2];
+            window_1[2] <= line_buf0[vga_x+2];
           end
           2'd2: begin
-            window[0][2] <= line_buf0[vga_x+2];
-            window[1][2] <= line_buf1[vga_x+2];
+            window_0[2] <= line_buf0[vga_x+2];
+            window_1[2] <= line_buf1[vga_x+2];
           end
           2'd3: begin
-            window[0][2] <= line_buf1[vga_x+2];
-            window[1][2] <= line_buf2[vga_x+2];
+            window_0[2] <= line_buf1[vga_x+2];
+            window_1[2] <= line_buf2[vga_x+2];
           end
           default: ;
         endcase
       end else if (vga_x >= COLS - 2) begin //second last row up within 2 away from the right edge. last row doesnt matter here
         case (buffer_y)
           2'd0: begin
-            window[0][2] <= line_buf2[vga_x+2-COLS];
-            window[1][2] <= line_buf3[vga_x+2-COLS];
+            window_0[2] <= line_buf2[vga_x+2-COLS];
+            window_1[2] <= line_buf3[vga_x+2-COLS];
           end
           2'd1: begin
-            window[0][2] <= line_buf3[vga_x+2-COLS];
-            window[1][2] <= line_buf0[vga_x+2-COLS];
+            window_0[2] <= line_buf3[vga_x+2-COLS];
+            window_1[2] <= line_buf0[vga_x+2-COLS];
           end
           2'd2: begin
-            window[0][2] <= line_buf0[vga_x+2-COLS];
-            window[1][2] <= line_buf1[vga_x+2-COLS];
+            window_0[2] <= line_buf0[vga_x+2-COLS];
+            window_1[2] <= line_buf1[vga_x+2-COLS];
           end
           2'd3: begin
-            window[0][2] <= line_buf1[vga_x+2-COLS];
-            window[1][2] <= line_buf2[vga_x+2-COLS];
+            window_0[2] <= line_buf1[vga_x+2-COLS];
+            window_1[2] <= line_buf2[vga_x+2-COLS];
           end
           default: ;
         endcase
       end
 
-      window[0][0] <= window[0][1];
-      window[1][0] <= window[1][1];
-      window[2][0] <= window[2][1];
+      window_0[0] <= window_0[1];
+      window_1[0] <= window_1[1];
+      window_2[0] <= window_2[1];
 
-      window[0][1] <= window[0][2];
-      window[1][1] <= window[1][2];
-      window[2][1] <= window[2][2];
+      window_0[1] <= window_0[2];
+      window_1[1] <= window_1[2];
+      window_2[1] <= window_2[2];
     end
   end
 
